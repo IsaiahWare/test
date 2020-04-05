@@ -58,18 +58,17 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
-	int n, m; 		// Indecies for rows and columns in matrix
-	int row, col;	// Track current row and column in matrix
+	int i, j;	// Track current row and column in matrix
 	int d_val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
 	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
 	// Iterates through each column and row
-	for (col = 0; col < N; col += 8) { 
-		for (row = 0; row < N; row += 8) {
+	for (int j = 0; j < N; j += 8) { 
+		for (int i = 0; i < N; i += 8) {
 
 			// For each row and column in the designated block, until end of matrix
-			for (n = row; n < (row + 8); n++) {
-				for (m = col; m < (col + 8); m++) {
+			for (int n = i; n < (i + 8); n++) {
+				for (int m = j; m < (j + 8); m++) {
 
 					// If row and column do not match, transposition will occur
 					if (n != m) {
@@ -84,7 +83,7 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 					}
 				}
 				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
-				if (row == col) {
+				if (i == j) {
 					B[diag][diag] = d_val;
 				}
 			}	
