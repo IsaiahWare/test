@@ -11,9 +11,9 @@
 #include "cachelab.h"
 
 int is_transpose(int M, int N, int A[N][M], int B[M][N]);
-void transpose_32(int M, int N, int A[N][M], int B[M][N]);
-void transpose_64(int M, int N, int A[N][M], int B[M][N]);
-void transpose_other(int M, int N, int A[N][M], int B[M][N]);
+void transpose32(int M, int N, int A[N][M], int B[M][N]);
+void transpose64(int M, int N, int A[N][M], int B[M][N]);
+void transposeExtra(int M, int N, int A[N][M], int B[M][N]);
 
 /* 
  * transpose_submit - This is the solution transpose function that you
@@ -25,11 +25,11 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
   if (N == 32) {
-      transpose_32(M, N, A, B);
+      transpose32(M, N, A, B);
   } else if (N == 64) {
-      transpose_64(M, N, A, B);
+      transpose64(M, N, A, B);
   } else {
-      transpose_other(M, N, A, B);
+      transposeExtra(M, N, A, B);
   }
 }
 
@@ -40,10 +40,10 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */ 
 
 /*
- * transpose_32 - Transposes 32x32 matrix
+ * transpose32 - Transposes 32x32 matrix
  */
-char transpose_32_desc[] = "Transpose a 32x32 matrix";
-void transpose_32(int M, int N, int A[N][M], int B[M][N]){
+char transpose32_desc[] = "Transpose a 32x32 matrix";
+void transpose32(int M, int N, int A[N][M], int B[M][N]){
   for (int i = 0; i < N; i += 8) {
       for (int j = 0; j < M; j += 8) {
           for (int k = i; k < i + 8; k++) {
@@ -58,10 +58,10 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_64 - Transposes 64x64 matrix
+ * transpose64 - Transposes 64x64 matrix
  */
-char transpose_64_desc[] = "Transpose a 64x64 matrix";
-void transpose_64(int M, int N, int A[N][M], int B[M][N]){
+char transpose64_desc[] = "Transpose a 64x64 matrix";
+void transpose64(int M, int N, int A[N][M], int B[M][N]){
   for (int i = 0; i < N; i += 8) {
       for (int j = 0; j < M; j += 8) {
           for (int m = i; m < i + 4; m++) {
@@ -99,10 +99,10 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_other - Transposes non 32x32 or 64x64 matrix
+ * transposeExtra - Transposes non 32x32 or 64x64 matrix
  */
-char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
-void transpose_other(int M, int N, int A[N][M], int B[M][N]){
+char transposeExtra_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
+void transposeExtra(int M, int N, int A[N][M], int B[M][N]){
   for (int i = 0; i < N; i += 23) {
       for (int j = 0;  j < M; j += 23) {
           for (int k = i; k < i + 23; k++) {
@@ -150,9 +150,10 @@ void registerFunctions()
     registerTransFunction(transpose_submit, transpose_submit_desc); 
 
     /* Register any additional transpose functions */
-    registerTransFunction(transpose_32, transpose_32_desc);
-    registerTransFunction(transpose_64, transpose_64_desc);
-    registerTransFunction(transpose_other, transpose_other_desc);
+    registerTransFunction(trans, trans_desc); 
+    registerTransFunction(transpose32, transpose32_desc);
+    registerTransFunction(transpose64, transpose64_desc);
+    registerTransFunction(transposeExtra, transposeExtra_desc);
 
 }
 
