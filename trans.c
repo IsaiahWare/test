@@ -57,27 +57,31 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
-
-	int val = 0, pos = 0;
-	// Iterates through each column and row
-	for (int j = 0; j < N; j += 8) { 
-		for (int i = 0; i < N; i += 8) {
-			for (int n = i; n < i + 8; n++) {
-				for (int m = j; m < j + 8; m++) {
-					if (n != m) {
-						B[m][n] = A[n][m];
-					} else {
-						val = A[n][m];
-            pos = n;
-					}
-				}
-				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
-				if (i == j) {
-					B[pos][pos] = val;
-				}
-			}	
-		}
-	}
+  int i, j, k, l, t1, t2, t3, t4, t5, t6, t7, t8;
+  for (i = 0; i < N; i += 8) {
+      for (j = 0; j < M; j += 8) {
+          for (k = i; k < i + 8; k++) {
+              for (l = j; l < j + 8; l += 8) {
+                  t1 = A[k][l];
+                  t2 = A[k][l + 1];
+                  t3 = A[k][l + 2];
+                  t4 = A[k][l + 3];
+                  t5 = A[k][l + 4];
+                  t6 = A[k][l + 5];
+                  t7 = A[k][l + 6];
+                  t8 = A[k][l + 7];
+                  B[l][k] = t1;
+                  B[l + 1][k] = t2;
+                  B[l + 2][k] = t3;
+                  B[l + 3][k] = t4;
+                  B[l + 4][k] = t5;
+                  B[l + 5][k] = t6;
+                  B[l + 6][k] = t7;
+                  B[l + 7][k] = t8;
+              }
+          }
+      }
+  }
 }
 
 /*
@@ -153,12 +157,12 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]){
 	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
 	// Iterates through each column and row
-	for (col = 0; col < M; col += 16) {
-		for (row = 0; row < N; row += 16) {
+	for (int col = 0; col < M; col += 16) {
+		for (int row = 0; row < N; row += 16) {
 
 			// For each row and column after current one, until end of matrix
-			for (n = row; (n < row + 16) && (n < N); n++) {
-				for (m = col; (m < col + 16) && (m < M); m++) {
+			for (int n = row; (n < row + 16) && (n < N); n++) {
+				for (int m = col; (m < col + 16) && (m < M); m++) {
 
 					// If row and column number do not match, transposition will occur
 					if (n != m) {
