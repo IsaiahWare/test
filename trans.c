@@ -114,7 +114,7 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               int val2 = A[i + 5][n - 4];
               int val3 = A[i + 6][n - 4];
               int val4 = A[i + 7][n - 4];
-
+              int val5 = B[n - 4][i + 4];
 
               B[n - 4][i + 4] = val1;
               B[n - 4][i + 5] = val2;
