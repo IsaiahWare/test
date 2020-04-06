@@ -113,10 +113,18 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[n - 4][i + 6] = val3;
               B[n - 4][i + 7] = val4;
 
-              B[n][i] = val5;
-              B[n][i + 1] = val6;
-              B[n][i + 2] = val7;
-              B[n][i + 3] = val8;
+              for (int x=0; i<4; i++) {
+                switch(x) {
+                  case 0:
+                    B[n][i] = val5;
+                  case 1:
+                    B[n][i + 1] = val6;
+                  case 2:
+                    B[n][i + 2] = val7;
+                  case 3:
+                    B[n][i + 3] = val8;
+                }
+              }
 
               B[n][i + 4] = A[i + 4][n];
               B[n][i + 5] = A[i + 5][n];
@@ -128,14 +136,7 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_other - Matrix transposition function optimized for matricies that aren't 32x32 or 64x64
- 					Appears to be a fairly optimal solution - # of misses for a 61x67 matrix is ~1800
- * Params: 
- *	M - Number of columns in the matrix
- *	N -	Number of rows in the matrix
- *	A[N][M] - Input matrix - the one transposed from
- *	B[N][M] - Input matrix - the one transposed to
- * Returns: void
+ * transpose_other - Matrix transposition for non 32x32 and 64x64 matricies
  */
 char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
 void transpose_other(int M, int N, int A[N][M], int B[M][N]){
@@ -145,7 +146,10 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]){
             if (k >= N) {
               break;
             }
-              for (int l = j; l < j + 23 && l < M; l++) {
+              for (int l = j; l < j + 23; l++) {
+                if (l >= M) {
+                  break;
+                }
                   int val = A[k][l];
                   B[l][k] = val;
               }
