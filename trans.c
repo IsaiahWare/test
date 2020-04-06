@@ -112,19 +112,10 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[n - 4][i + 5] = val2;
               B[n - 4][i + 6] = val3;
               B[n - 4][i + 7] = val4;
-
-              for (int x=0; i<4; i++) {
-                switch(x) {
-                  case 0:
-                    B[n][i] = val5;
-                  case 1:
-                    B[n][i + 1] = val6;
-                  case 2:
-                    B[n][i + 2] = val7;
-                  case 3:
-                    B[n][i + 3] = val8;
-                }
-              }
+              B[n][i] = val5;
+              B[n][i + 1] = val6;
+              B[n][i + 2] = val7;
+              B[n][i + 3] = val8;
 
               B[n][i + 4] = A[i + 4][n];
               B[n][i + 5] = A[i + 5][n];
@@ -150,8 +141,7 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]){
                 if (l >= M) {
                   break;
                 }
-                  int val = A[k][l];
-                  B[l][k] = val;
+                  B[l][k] = A[k][l];
               }
           }
       }
