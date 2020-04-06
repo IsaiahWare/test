@@ -92,54 +92,53 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
-int i, j, k, l, t1, t2, t3, t4, t5, t6, t7, t8;
-  for (i = 0; i < N; i += 8) {
-      for (j = 0; j < M; j += 8) {
-          for (k = i; k < i + 4; k++) {
-              t1 = A[k][j];
-              t2 = A[k][j + 1];
-              t3 = A[k][j + 2];
-              t4 = A[k][j + 3];
-              t5 = A[k][j + 4];
-              t6 = A[k][j + 5];
-              t7 = A[k][j + 6];
-              t8 = A[k][j + 7];
+int t1, t2, t3, t4, t5, t6, t7, t8;
+  for (int i = 0; i < N; i += 8) {
+      for (int j = 0; j < M; j += 8) {
+          for (int m = i; m < i + 4; m++) {
+              t1 = A[m][j];
+              t2 = A[m][j + 1];
+              t3 = A[m][j + 2];
+              t4 = A[m][j + 3];
+              t5 = A[m][j + 4];
+              t6 = A[m][j + 5];
+              t7 = A[m][j + 6];
+              t8 = A[m][j + 7];
 
-              B[j][k] = A[k][j];
-              B[j + 1][k] = A[k][j + 1];
-              B[j + 2][k] = A[k][j + 2];
-              B[j + 3][k] = A[k][j + 3];
-              B[j][k + 4] = A[k][j + 4];
-              B[j + 1][k + 4] = A[k][j + 5];
-              B[j + 2][k + 4] = A[k][j + 6];
-              B[j + 3][k + 4] = A[k][j + 7];
+              B[j][m] = A[m][j];
+              B[j + 1][m] = A[m][j + 1];
+              B[j + 2][m] = A[m][j + 2];
+              B[j + 3][m] = A[m][j + 3];
+              B[j][m + 4] = A[m][j + 4];
+              B[j + 1][m + 4] = A[m][j + 5];
+              B[j + 2][m + 4] = A[m][j + 6];
+              B[j + 3][m + 4] = A[m][j + 7];
           }
-          for (l = j + 4; l < j + 8; l++) {
+          for (int n = j + 4; n < j + 8; n++) {
+              t5 = A[i + 4][n - 4];
+              t6 = A[i + 5][n - 4];
+              t7 = A[i + 6][n - 4];
+              t8 = A[i + 7][n - 4];
 
-              t5 = A[i + 4][l - 4];
-              t6 = A[i + 5][l - 4];
-              t7 = A[i + 6][l - 4];
-              t8 = A[i + 7][l - 4];
+              t1 = B[n - 4][i + 4];
+              t2 = B[n - 4][i + 5];
+              t3 = B[n - 4][i + 6];
+              t4 = B[n - 4][i + 7];
 
-              t1 = B[l - 4][i + 4];
-              t2 = B[l - 4][i + 5];
-              t3 = B[l - 4][i + 6];
-              t4 = B[l - 4][i + 7];
+              B[n - 4][i + 4] = t5;
+              B[n - 4][i + 5] = t6;
+              B[n - 4][i + 6] = t7;
+              B[n - 4][i + 7] = t8;
 
-              B[l - 4][i + 4] = t5;
-              B[l - 4][i + 5] = t6;
-              B[l - 4][i + 6] = t7;
-              B[l - 4][i + 7] = t8;
+              B[n][i] = t1;
+              B[n][i + 1] = t2;
+              B[n][i + 2] = t3;
+              B[n][i + 3] = t4;
 
-              B[l][i] = t1;
-              B[l][i + 1] = t2;
-              B[l][i + 2] = t3;
-              B[l][i + 3] = t4;
-
-              B[l][i + 4] = A[i + 4][l];
-              B[l][i + 5] = A[i + 5][l];
-              B[l][i + 6] = A[i + 6][l];
-              B[l][i + 7] = A[i + 7][l];
+              B[n][i + 4] = A[i + 4][n];
+              B[n][i + 5] = A[i + 5][n];
+              B[n][i + 6] = A[i + 6][n];
+              B[n][i + 7] = A[i + 7][n];
           }
       }
   }
