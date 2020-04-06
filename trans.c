@@ -40,15 +40,14 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */ 
 
 /*
- * transpose_32 - Matrix transposition function optimized for a 32x32 matrix
+ * transpose_32 - Transposes 32x32 matrix
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
-  int i, j, k, l;
-  for (i = 0; i < N; i += 8) {
-      for (j = 0; j < M; j += 8) {
-          for (k = i; k < i + 8; k++) {
-              for (l = j; l < j + 8; l += 8) {
+  for (int i = 0; i < N; i += 8) {
+      for (int j = 0; j < M; j += 8) {
+          for (int k = i; k < i + 8; k++) {
+              for (int l = j; l < j + 8; l += 8) {
                 for (int z = 0; z < 8; z++) {
                   B[l+z][k] = A[k][l+z];
                 }
@@ -59,7 +58,7 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_64 - Matrix transposition for a 64x64 matrix
+ * transpose_64 - Transposes 64x64 matrix
  */
 char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
@@ -70,32 +69,26 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[j + 1][m] = A[m][j + 1];
               B[j + 2][m] = A[m][j + 2];
               B[j + 3][m] = A[m][j + 3];
-
               B[j][m + 4] = A[m][j + 4];
               B[j + 1][m + 4] = A[m][j + 5];
               B[j + 2][m + 4] = A[m][j + 6];
               B[j + 3][m + 4] = A[m][j + 7];
           }
           for (int n = j + 4; n < j + 8; n++) {
-              // int val1 = A[i + 4][n - 4];
-              // int val2 = A[i + 5][n - 4];
-              // int val3 = A[i + 6][n - 4];
-              // int val4 = A[i + 7][n - 4];
-              int val5 = B[n - 4][i + 4];
-              int val6 = B[n - 4][i + 5];
-              int val7 = B[n - 4][i + 6];
-              int val8 = B[n - 4][i + 7];
+              int val1 = B[n - 4][i + 4];
+              int val2 = B[n - 4][i + 5];
+              int val3 = B[n - 4][i + 6];
+              int val4 = B[n - 4][i + 7];
 
               B[n - 4][i + 4] = A[i + 4][n - 4];
               B[n - 4][i + 5] = A[i + 5][n - 4];
               B[n - 4][i + 6] = A[i + 6][n - 4];
               B[n - 4][i + 7] = A[i + 7][n - 4];
               
-              B[n][i] = val5;
-              B[n][i + 1] = val6;
-              B[n][i + 2] = val7;
-              B[n][i + 3] = val8;
-
+              B[n][i] = val1;
+              B[n][i + 1] = val2;
+              B[n][i + 2] = val3;
+              B[n][i + 3] = val4;
               B[n][i + 4] = A[i + 4][n];
               B[n][i + 5] = A[i + 5][n];
               B[n][i + 6] = A[i + 6][n];
@@ -106,7 +99,7 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_other - Matrix transposition for non 32x32 and 64x64 matricies
+ * transpose_other - Transposes non 32x32 or 64x64 matrix
  */
 char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
 void transpose_other(int M, int N, int A[N][M], int B[M][N]){
@@ -157,9 +150,6 @@ void registerFunctions()
     registerTransFunction(transpose_submit, transpose_submit_desc); 
 
     /* Register any additional transpose functions */
-    registerTransFunction(trans, trans_desc);
-
-    // Register custom transpose functions
     registerTransFunction(transpose_32, transpose_32_desc);
     registerTransFunction(transpose_64, transpose_64_desc);
     registerTransFunction(transpose_other, transpose_other_desc);
