@@ -58,27 +58,17 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
-	int val = 0, pos = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
-	//int pos = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
-
+	int val = 0, pos = 0;
 	// Iterates through each column and row
 	for (int j = 0; j < N; j += 8) { 
 		for (int i = 0; i < N; i += 8) {
-
-			// For each row and column in the designated block, until end of matrix
 			for (int n = i; n < i + 8; n++) {
 				for (int m = j; m < j + 8; m++) {
-
-					// If row and column do not match, transposition will occur
 					if (n != m) {
 						B[m][n] = A[n][m];
-					// Else, row and column are same and element in matrix is defined as a diagonal
 					} else {
-
-						// Assign diagonal element to a temporary variable
-						// This saves an individual cache miss on each run through the matrix where the columns and rows still match up
-						pos = n;
 						val = A[n][m];
+            pos = n;
 					}
 				}
 				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
@@ -102,39 +92,57 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
+int i, j, k, l, t1, t2, t3, t4, t5, t6, t7, t8;
+  for (i = 0; i < N; i += 8) {
+      for (j = 0; j < M; j += 8) {
+          for (k = i; k < i + 4; k++) {
+              t1 = A[k][j];
+              t2 = A[k][j + 1];
+              t3 = A[k][j + 2];
+              t4 = A[k][j + 3];
+              t5 = A[k][j + 4];
+              t6 = A[k][j + 5];
+              t7 = A[k][j + 6];
+              t8 = A[k][j + 7];
 
-	int n, m; 		// Indecies for rows and columns in matrix
-	int row, col;	// Track current row and column in matrix
-	int d_val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
-	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
+              B[j][k] = t1;
+              B[j + 1][k] = t2;
+              B[j + 2][k] = t3;
+              B[j + 3][k] = t4;
+              B[j][k + 4] = t5;
+              B[j + 1][k + 4] = t6;
+              B[j + 2][k + 4] = t7;
+              B[j + 3][k + 4] = t8;
+          }
+          for (l = j + 4; l < j + 8; l++) {
 
-	// Iterates through each column and row
-	for (col = 0; col < N; col += 4) { 
-		for (row = 0; row < N; row += 4) {
+              t5 = A[i + 4][l - 4];
+              t6 = A[i + 5][l - 4];
+              t7 = A[i + 6][l - 4];
+              t8 = A[i + 7][l - 4];
 
-			// For each row and column in the designated block, until end of matrix
-			for (n = row; n < (row + 4); n++) {
-				for (m = col; m < (col + 4); m++) {
+              t1 = B[l - 4][i + 4];
+              t2 = B[l - 4][i + 5];
+              t3 = B[l - 4][i + 6];
+              t4 = B[l - 4][i + 7];
 
-					// If row and column number do not match, transposition will occur
-					if (n != m) {
-						B[m][n] = A[n][m];
-					// Else, row and column number are same and element in matrix is defined as a diagonal
-					} else {
+              B[l - 4][i + 4] = t5;
+              B[l - 4][i + 5] = t6;
+              B[l - 4][i + 6] = t7;
+              B[l - 4][i + 7] = t8;
 
-						// Assign diagonal element to a temporary variable
-						// This saves an individual cache miss on each run through the matrix where the columns and rows still match up
-						diag = n;
-						d_val = A[n][m];
-					}
-				}
-				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
-				if (row == col) {
-					B[diag][diag] = d_val;
-				}
-			}	
-		}
-	}
+              B[l][i] = t1;
+              B[l][i + 1] = t2;
+              B[l][i + 2] = t3;
+              B[l][i + 3] = t4;
+
+              B[l][i + 4] = A[i + 4][l];
+              B[l][i + 5] = A[i + 5][l];
+              B[l][i + 6] = A[i + 6][l];
+              B[l][i + 7] = A[i + 7][l];
+          }
+      }
+  }
 }
 
 /*
