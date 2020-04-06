@@ -40,34 +40,33 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */ 
 
 /*
- * transpose_32 - Matrix transposition function optimized for a 32x32 matrix
-
+ * transpose_32 - Matrix transposition for 32x32 matrix
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
-  int i, j, k, l;
-  int val1, val2, val3, val4, val5, val6, val7, val8;
-  for (i = 0; i < N; i += 8) {
-      for (j = 0; j < M; j += 8) {
-          for (k = i; k < i + 8; k++) {
-              for (l = j; l < j + 8; l += 8) {
-                  val1 = A[k][l];
-                  val2 = A[k][l + 1];
-                  val3 = A[k][l + 2];
-                  val4 = A[k][l + 3];
-                  val5 = A[k][l + 4];
-                  val6 = A[k][l + 5];
-                  val7 = A[k][l + 6];
-                  val8 = A[k][l + 7];
+  //int i, j, k, l;
+  //int val1, val2, val3, val4, val5, val6, val7, val8;
+  for (int i = 0; i < N; i += 8) {
+      for (int j = 0; j < M; j += 8) {
+          for (int k = i; k < i + 8; k++) {
+              for (int l = j; l < j + 8; l += 8) {
+                  // val1 = A[k][l];
+                  // val2 = A[k][l + 1];
+                  // val3 = A[k][l + 2];
+                  // val4 = A[k][l + 3];
+                  // val5 = A[k][l + 4];
+                  // val6 = A[k][l + 5];
+                  // val7 = A[k][l + 6];
+                  // val8 = A[k][l + 7];
 
-                  B[l][k] = val1;
-                  B[l + 1][k] = val2;
-                  B[l + 2][k] = val3;
-                  B[l + 3][k] = val4;
-                  B[l + 4][k] = val5;
-                  B[l + 5][k] = val6;
-                  B[l + 6][k] = val7;
-                  B[l + 7][k] = val8;
+                  B[l][k] = A[k][l];
+                  B[l + 1][k] = A[k][l + 1];
+                  B[l + 2][k] = A[k][l + 2];
+                  B[l + 3][k] = A[k][l + 3];
+                  B[l + 4][k] = A[k][l + 4];
+                  B[l + 5][k] = A[k][l + 5];
+                  B[l + 6][k] = A[k][l + 6];
+                  B[l + 7][k] = A[k][l + 7];
               }
           }
       }
@@ -86,21 +85,16 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[j + 1][m] = A[m][j + 1];
               B[j + 2][m] = A[m][j + 2];
               B[j + 3][m] = A[m][j + 3];
-
               B[j][m + 4] = A[m][j + 4];
               B[j + 1][m + 4] = A[m][j + 5];
               B[j + 2][m + 4] = A[m][j + 6];
               B[j + 3][m + 4] = A[m][j + 7];
           }
           for (int n = j + 4; n < j + 8; n++) {
-              // int val1 = 
-              // int val2 = 
-              // int val3 = 
-              // int val4 = 
-              int val5 = B[n - 4][i + 4];
-              int val6 = B[n - 4][i + 5];
-              int val7 = B[n - 4][i + 6];
-              int val8 = B[n - 4][i + 7];
+              int val1 = B[n - 4][i + 4];
+              int val2 = B[n - 4][i + 5];
+              int val3 = B[n - 4][i + 6];
+              int val4 = B[n - 4][i + 7];
 
               B[n - 4][i + 4] = A[i + 4][n - 4];
               B[n - 4][i + 5] = A[i + 5][n - 4];
