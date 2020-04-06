@@ -120,20 +120,18 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[n - 4][i + 7] = val4;
 
               for (int z = 0; z < 8; z++) {
-                if (z < 4) {
-                  B[n][i + 0] = val5;
-                  B[n][i + 1] = val6;
-                  B[n][i + 2] = val7;
-                  B[n][i + 3] = val8;
-                } else {
-                  B[n][i + 4] = A[i + 4][n];
-                  B[n][i + 5] = A[i + 5][n];
-                  B[n][i + 6] = A[i + 6][n];
-                  B[n][i + 7] = A[i + 7][n];
-                }
-
-
+                
               }
+
+              B[n][i] = val5;
+              B[n][i + 1] = val6;
+              B[n][i + 2] = val7;
+              B[n][i + 3] = val8;
+
+              B[n][i + 4] = A[i + 4][n];
+              B[n][i + 5] = A[i + 5][n];
+              B[n][i + 6] = A[i + 6][n];
+              B[n][i + 7] = A[i + 7][n];
           }
       }
   }
