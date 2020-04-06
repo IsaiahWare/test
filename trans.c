@@ -92,19 +92,9 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
-int t1, t2, t3, t4, t5, t6, t7, t8;
   for (int i = 0; i < N; i += 8) {
       for (int j = 0; j < M; j += 8) {
           for (int m = i; m < i + 4; m++) {
-              t1 = A[m][j];
-              t2 = A[m][j + 1];
-              t3 = A[m][j + 2];
-              t4 = A[m][j + 3];
-              t5 = A[m][j + 4];
-              t6 = A[m][j + 5];
-              t7 = A[m][j + 6];
-              t8 = A[m][j + 7];
-
               B[j][m] = A[m][j];
               B[j + 1][m] = A[m][j + 1];
               B[j + 2][m] = A[m][j + 2];
@@ -115,25 +105,24 @@ int t1, t2, t3, t4, t5, t6, t7, t8;
               B[j + 3][m + 4] = A[m][j + 7];
           }
           for (int n = j + 4; n < j + 8; n++) {
-              t5 = A[i + 4][n - 4];
-              t6 = A[i + 5][n - 4];
-              t7 = A[i + 6][n - 4];
-              t8 = A[i + 7][n - 4];
+              int val1 = A[i + 4][n - 4];
+              int val2 = A[i + 5][n - 4];
+              int val3 = A[i + 6][n - 4];
+              int val4 = A[i + 7][n - 4];
+              int val5 = B[n - 4][i + 4];
+              int val6 = B[n - 4][i + 5];
+              int val7 = B[n - 4][i + 6];
+              int val8 = B[n - 4][i + 7];
 
-              t1 = B[n - 4][i + 4];
-              t2 = B[n - 4][i + 5];
-              t3 = B[n - 4][i + 6];
-              t4 = B[n - 4][i + 7];
+              B[n - 4][i + 4] = val1;
+              B[n - 4][i + 5] = val2;
+              B[n - 4][i + 6] = val3;
+              B[n - 4][i + 7] = val4;
 
-              B[n - 4][i + 4] = t5;
-              B[n - 4][i + 5] = t6;
-              B[n - 4][i + 6] = t7;
-              B[n - 4][i + 7] = t8;
-
-              B[n][i] = t1;
-              B[n][i + 1] = t2;
-              B[n][i + 2] = t3;
-              B[n][i + 3] = t4;
+              B[n][i] = val5;
+              B[n][i + 1] = val6;
+              B[n][i + 2] = val7;
+              B[n][i + 3] = val8;
 
               B[n][i + 4] = A[i + 4][n];
               B[n][i + 5] = A[i + 5][n];
