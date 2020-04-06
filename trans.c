@@ -139,13 +139,11 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
 void transpose_other(int M, int N, int A[N][M], int B[M][N]){
-  int i, j, k, l, t;
-  int size = 23;
-  for (i = 0; i < N; i += size) {
-      for (j = 0;  j < M; j += size) {
-          for (k = i; k < i + size && k < N; k++) {
-              for (l = j; l < j + size && l < M; l++) {
-                  t = A[k][l];
+  for (int i = 0; i < N; i += 23) {
+      for (int j = 0;  j < M; j += 23) {
+          for (int k = i; k < i + 23 && k < N; k++) {
+              for (int l = j; l < j + 23 && l < M; l++) {
+                  int t = A[k][l];
                   B[l][k] = t;
               }
           }
