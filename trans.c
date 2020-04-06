@@ -24,19 +24,13 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]);
  */
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
-
-	// Determine variation of transpose function to run based on dimensions of input matrix
-	switch(N) {
-    	case 32:	// 32x32 matrix
-    		transpose_32(M, N, A, B);
-        	break;
-    	case 64:	// 64x64 matrix
-    		transpose_64(M, N, A, B);
-      		break;
-      	default:	// all matrices not 32x32 or 64x64
-        	transpose_other(M, N, A, B);
-        	break;
-    }
+  if (N == 32) {
+      transpose_32(M, N, A, B);
+  } else if (N == 64) {
+      transpose_64(M, N, A, B);
+  } else {
+      transpose_other(M, N, A, B);
+  }
 }
 
 
@@ -57,21 +51,29 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
-  int i, j, k, l, z;
+  int i, j, k, l;
+  int val1, val2, val3, val4, val5, val6, val7, val8;
   for (i = 0; i < N; i += 8) {
       for (j = 0; j < M; j += 8) {
           for (k = i; k < i + 8; k++) {
               for (l = j; l < j + 8; l += 8) {
-                for (z = 0; z < 8; z++) {
-                  B[l + z][k] = A[k][l];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                  B[l + z][k] = A[k][l + z];
-                }
+                  val1 = A[k][l];
+                  val2 = A[k][l + 1];
+                  val3 = A[k][l + 2];
+                  val4 = A[k][l + 3];
+                  val5 = A[k][l + 4];
+                  val6 = A[k][l + 5];
+                  val7 = A[k][l + 6];
+                  val8 = A[k][l + 7];
+
+                  B[l][k] = val1;
+                  B[l + 1][k] = val2;
+                  B[l + 2][k] = val3;
+                  B[l + 3][k] = val4;
+                  B[l + 4][k] = val5;
+                  B[l + 5][k] = val6;
+                  B[l + 6][k] = val7;
+                  B[l + 7][k] = val8;
               }
           }
       }
@@ -79,14 +81,7 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 }
 
 /*
- * transpose_64 - Matrix transposition function optimized for a 64x64 matrix
- 					Not the most optimal solution - couldn't determine a way to reduce # of misses below ~1750 =(
- * Params: 
- *	M - Number of columns in the matrix
- *	N -	Number of rows in the matrix
- *	A[N][M] - Input matrix - the one transposed from
- *	B[N][M] - Input matrix - the one transposed to
- * Returns: void
+ * transpose_64 - Matrix transposition for a 64x64 matrix
  */
 char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
@@ -97,6 +92,7 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[j + 1][m] = A[m][j + 1];
               B[j + 2][m] = A[m][j + 2];
               B[j + 3][m] = A[m][j + 3];
+
               B[j][m + 4] = A[m][j + 4];
               B[j + 1][m + 4] = A[m][j + 5];
               B[j + 2][m + 4] = A[m][j + 6];
@@ -150,8 +146,8 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]){
 	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
 	// Iterates through each column and row
-	for (col = 0; col < M; col += 16) {
-		for (row = 0; row < N; row += 16) {
+	for (row = 0; row < M; row += 16) {
+		for (col = 0; col < N; col += 16) {
 
 			// For each row and column after current one, until end of matrix
 			for (n = row; (n < row + 16) && (n < N); n++) {
