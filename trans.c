@@ -144,7 +144,7 @@ void transpose_other(int M, int N, int A[N][M], int B[M][N]){
           for (int k = i; k < i + 23 && k < N; k++) {
               for (int l = j; l < j + 23 && l < M; l++) {
                   int val = A[k][l];
-                  B[l][k] = tval;
+                  B[l][k] = val;
               }
           }
       }
