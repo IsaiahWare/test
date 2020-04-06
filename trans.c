@@ -57,8 +57,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
-
-        int i, j, k, l, t1, t2, t3, t4, t5, t6, t7, t8;
+   int i, j, k, l, t1, t2, t3, t4, t5, t6, t7, t8;
         for (i = 0; i < N; i += 8) {
             for (j = 0; j < M; j += 8) {
                 for (k = i; k < i + 8; k++) {
@@ -115,6 +114,9 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               int val3 = A[i + 6][n - 4];
               int val4 = A[i + 7][n - 4];
               int val5 = B[n - 4][i + 4];
+              int val6 = B[n - 4][i + 5];
+              int val7 = B[n - 4][i + 6];
+              int val8 = B[n - 4][i + 7];
 
               B[n - 4][i + 4] = val1;
               B[n - 4][i + 5] = val2;
