@@ -58,16 +58,16 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
-	int val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
-	int pos = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
+	int val = 0, pos = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
+	//int pos = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
 	// Iterates through each column and row
 	for (int j = 0; j < N; j += 8) { 
 		for (int i = 0; i < N; i += 8) {
 
 			// For each row and column in the designated block, until end of matrix
-			for (int n = i; n < (i + 8); n++) {
-				for (int m = j; m < (j + 8); m++) {
+			for (int n = i; n < i + 8; n++) {
+				for (int m = j; m < j + 8; m++) {
 
 					// If row and column do not match, transposition will occur
 					if (n != m) {
