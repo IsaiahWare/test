@@ -141,7 +141,10 @@ char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
 void transpose_other(int M, int N, int A[N][M], int B[M][N]){
   for (int i = 0; i < N; i += 23) {
       for (int j = 0;  j < M; j += 23) {
-          for (int k = i; k < i + 23 && k < N; k++) {
+          for (int k = i; k < i + 23; k++) {
+            if (k >= N) {
+              break;
+            }
               for (int l = j; l < j + 23 && l < M; l++) {
                   int val = A[k][l];
                   B[l][k] = val;
