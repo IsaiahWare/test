@@ -139,39 +139,18 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
  */
 char transpose_other_desc[] = "Transpose any matrix that isn't 32x32 or 64x64";
 void transpose_other(int M, int N, int A[N][M], int B[M][N]){
-
-	int n, m; 		// Indecies for rows and columns in matrix
-	int row, col;	// Track current row and column in matrix
-	int d_val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
-	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
-
-	// Iterates through each column and row
-	for (row = 0; row < M; row += 16) {
-		for (col = 0; col < N; col += 16) {
-
-			// For each row and column after current one, until end of matrix
-			for (n = row; (n < row + 16) && (n < N); n++) {
-				for (m = col; (m < col + 16) && (m < M); m++) {
-
-					// If row and column number do not match, transposition will occur
-					if (n != m) {
-						B[m][n] = A[n][m];
-					// Else, row and column number are same and element in matrix is defined as a diagonal
-					} else {
-
-						// Assign diagonal element to a temporary variable
-						// This saves an individual cache miss on each run through the matrix where the columns and rows still match up
-						diag = n;
-						d_val = A[n][m];
-					}
-				}
-				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
-				if (row == col) {
-					B[diag][diag] = d_val;
-				}
-			}
-	 	}
-	}
+  int i, j, k, l, t;
+  int size = 23;
+  for (i = 0; i < N; i += size) {
+      for (j = 0;  j < M; j += size) {
+          for (k = i; k < i + size && k < N; k++) {
+              for (l = j; l < j + size && l < M; l++) {
+                  t = A[k][l];
+                  B[l][k] = t;
+              }
+          }
+      }
+  }
 }
 
 /* 
