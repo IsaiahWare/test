@@ -58,8 +58,8 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
-	int d_val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
-	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
+	int val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
+	int pos = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
 	// Iterates through each column and row
 	for (int j = 0; j < N; j += 8) { 
@@ -77,13 +77,13 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
 						// Assign diagonal element to a temporary variable
 						// This saves an individual cache miss on each run through the matrix where the columns and rows still match up
-						diag = n;
-						d_val = A[n][m];
+						pos = n;
+						val = A[n][m];
 					}
 				}
 				// If row and column are same, element is defined as a diagonal and our temporarily saved element is assigned
 				if (i == j) {
-					B[diag][diag] = d_val;
+					B[pos][pos] = val;
 				}
 			}	
 		}
