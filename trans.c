@@ -41,13 +41,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 
 /*
  * transpose_32 - Matrix transposition function optimized for a 32x32 matrix
- 					Fairly optimal solution - # of misses is ~290
- * Params: 
- *	M - Number of columns in the matrix
- *	N -	Number of rows in the matrix
- *	A[N][M] - Input matrix - the one transposed from
- *	B[N][M] - Input matrix - the one transposed to
- * Returns: void
+
  */
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
@@ -87,18 +81,7 @@ char transpose_64_desc[] = "Transpose a 64x64 matrix";
 void transpose_64(int M, int N, int A[N][M], int B[M][N]){
   for (int i = 0; i < N; i += 8) {
       for (int j = 0; j < M; j += 8) {
-          for (int m = i; m < i + 4; m++) {
-              B[j][m] = A[m][j];
-              B[j + 1][m] = A[m][j + 1];
-              B[j + 2][m] = A[m][j + 2];
-              B[j + 3][m] = A[m][j + 3];
-
-              B[j][m + 4] = A[m][j + 4];
-              B[j + 1][m + 4] = A[m][j + 5];
-              B[j + 2][m + 4] = A[m][j + 6];
-              B[j + 3][m + 4] = A[m][j + 7];
-          }
-          for (int n = j + 4; n < j + 8; n++) {
+            for (int n = j + 4; n < j + 8; n++) {
               int val1 = A[i + 4][n - 4];
               int val2 = A[i + 5][n - 4];
               int val3 = A[i + 6][n - 4];
@@ -121,6 +104,17 @@ void transpose_64(int M, int N, int A[N][M], int B[M][N]){
               B[n][i + 5] = A[i + 5][n];
               B[n][i + 6] = A[i + 6][n];
               B[n][i + 7] = A[i + 7][n];
+          }
+          for (int m = i; m < i + 4; m++) {
+              B[j][m] = A[m][j];
+              B[j + 1][m] = A[m][j + 1];
+              B[j + 2][m] = A[m][j + 2];
+              B[j + 3][m] = A[m][j + 3];
+
+              B[j][m + 4] = A[m][j + 4];
+              B[j + 1][m + 4] = A[m][j + 5];
+              B[j + 2][m + 4] = A[m][j + 6];
+              B[j + 3][m + 4] = A[m][j + 7];
           }
       }
   }
