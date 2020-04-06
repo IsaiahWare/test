@@ -50,7 +50,7 @@ void transpose_32(int M, int N, int A[N][M], int B[M][N]){
           for (k = i; k < i + 8; k++) {
               for (l = j; l < j + 8; l += 8) {
                 for (int z = 0; z < 8; z++) {
-                  B[l+z][k] = A[k][l+z]
+                  B[l+z][k] = A[k][l+z];
                 }
               }
           }
