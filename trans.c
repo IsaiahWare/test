@@ -58,7 +58,6 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 char transpose_32_desc[] = "Transpose a 32x32 matrix";
 void transpose_32(int M, int N, int A[N][M], int B[M][N]){
 
-	int i, j;	// Track current row and column in matrix
 	int d_val = 0;	// Hold value of diagonal element found in matrix (detailed in below code)
 	int diag = 0;	// Hold position of diagonal element found in matrix (detailed in below code)
 
